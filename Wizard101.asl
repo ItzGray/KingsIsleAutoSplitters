@@ -109,7 +109,6 @@ update {
 	}
 	if (vars.line != null) {
 		vars.line = vars.line.Substring(18);
-		print("Q: " + vars.questsCompleted);
 	}
 	if (vars.questsCompleted % 2 != 0 && vars.questsCompleted * -1 < 0) {
 		vars.questsCompleted = vars.questsCompleted * -1;
