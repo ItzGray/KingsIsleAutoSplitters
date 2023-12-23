@@ -130,7 +130,7 @@ update {
 }
 
 start {
-	vars.questsCompleted = 11;
+	vars.questsCompleted = 0;
 	vars.battlesCompleted = 0;
 	if (settings["starttimer"] == true) {
 		if (vars.line == "[DBGM] CORE_SEER       GameClient::MSG_CharacterSelected: Error=0, PrepPhase=1") {
