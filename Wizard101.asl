@@ -99,7 +99,10 @@ update {
 		if (vars.line == null || vars.line.Length < 18) {
 			return false;
 		}
-		if (vars.line.Substring(18, 6) == "[DBGL]" || vars.line.Substring(18, 6) == "[WARN]" || vars.line.Substring(18, 6) == "[ERRO]") {
+		else if (vars.line.Substring(18, 6) == "[DBGL]" || vars.line.Substring(18, 6) == "[WARN]" || vars.line.Substring(18, 6) == "[ERRO]") {
+			continue;
+		}
+		else if (vars.line.Substring(25, 16) != "CORE_SEER       " && vars.line.Substring(25, 16) != "QuestHelper     ") {
 			continue;
 		}
 		break;
