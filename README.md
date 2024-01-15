@@ -48,14 +48,6 @@ Lord Nightshade - Splits upon completion of the quest "Throwing Nightshade".
 Prince Gobblestone - Splits upon completion of the quest "Let's Make a Deal".
 
 Barons Greebly and Rotunda - Splits upon completion of the quest "Seal the Deal".
-## Important Other Stuff
-Akilles Skip - Related to an exploit used during Wizard City% runs that allows you to skip the General Akilles fight. It doesn't work for Gobbler King%, if you're wondering. Turn this option on if you're using it.
-
-Judd Skip - Related to an exploit used during Kraken% runs that allows you to access Triton Avenue before you're supposed to. This doesn't lead to any sequence break in the storyline, but allows you to skip the Old Judd fight in Kraken% due to the quest line being available before it really should be. Turn this option on if you're using it.
-#### Street Order (relevant only for Wizard City% and Gobbler King%)
-Cyclops Lane-Triton Avenue-Firecat Alley - Shifts up stuff to make it so the autosplitter follows this route for quest ordering.
-
-Triton Avenue-Cyclops Lane-Firecat Alley - Same as above.
 ## Unicorn Way
 Lost Souls - Splits upon completion of the quest "Ghost Hunters".
 
