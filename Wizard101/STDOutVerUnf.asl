@@ -256,7 +256,7 @@ split {
 		}
 	}
 	if (settings["hlsplit"] == true) {
-		if (vars.expGained == 2 && vars.expGainedNum == 85) {
+		if (vars.expGained == 2 && vars.expGainedNum == 195) {
 			vars.expGained = 0;
 			return true;
 		}
