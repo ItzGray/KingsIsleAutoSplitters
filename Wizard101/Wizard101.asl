@@ -61,6 +61,7 @@ startup {
 init {
 	var logPath = "";
 	vars.loading = 0;
+	// TODO: Replace with a better path thing
 	if (settings["verstandalone"] == true) {
 		logPath = "C:\\ProgramData\\KingsIsle Entertainment\\Wizard101\\Bin\\WizardClient.log";
 	}
