@@ -61,6 +61,12 @@ startup {
 init {
 	var logPath = "";
 	vars.loading = 0;
+	vars.change_state_count = 0;
+	vars.start_load_time = 0;
+	vars.end_load_time = 0;
+	vars.sigil_state = 0;
+	vars.restore_gametime = 0;
+	vars.game_load_time = 0;
 	// TODO: Replace with a better path thing
 	if (settings["verstandalone"] == true) {
 		logPath = "C:\\ProgramData\\KingsIsle Entertainment\\Wizard101\\Bin\\WizardClient.log";
@@ -76,6 +82,7 @@ init {
 		}
 		catch {}
 		vars.reader = new StreamReader(new FileStream(logPath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite));
+		print("Connected successfully");
 	} 
 	else {
 		print("Couldn't find log file path");
@@ -85,7 +92,7 @@ init {
 }
 
 update {
-	while (true) {
+	while (vars.reader != null) {
 		vars.line = vars.reader.ReadLine();
 		if (vars.line == null) {
 			return false;
@@ -93,12 +100,16 @@ update {
 		else if (vars.line.Length < 18) {
 			continue;
 		}
-		else if (vars.line.Substring(18, 6) == "[ERRO]" || vars.line.Substring(18, 6) == "[WARN]") {
+		else if (vars.line.Substring(18, 6) == "[ERRO]") {
 			continue;
 		}
 		break;
 	}
-	vars.line = vars.line.Substring(18);
+	if (vars.line != null) {
+		vars.line = vars.line.Substring(18);
+		// Debugging line
+		//print("Line " + vars.line);
+	}
 }
 
 start {
@@ -315,10 +326,31 @@ split {
 
 isLoading {
 	if (settings["loadtimeremoval"] == true) {
-		if (vars.line == "[DBGM] CORE_SEER       Transition windows has appeared" || vars.line == "[DBGM] CORE_SEER       GameClient closed application connection with state 0.") {
+		if (vars.line == "[DBGM] CORE_SEER       Transition windows has appeared" || vars.line == "[DBGM] CORE_SEER       GameClient closed application connection with state 0." || vars.line == "[DBGL] States          --- --- --- Successfully entered state: Sigil" || vars.line == "[DBGM] CORE_SEER       Received MSG_CombatPhase 5." || vars.line == "[STAT] ClientDuel      CombatPlanningPhaseWindow::ShowSpellSelection(False)") {
+			if (vars.sigil_state == 1) {
+				vars.load_time = DateTime.Now - vars.start_load_time;
+				vars.restore_gametime = 1;
+				vars.sigil_state = 0;
+				vars.change_state_count = 0;
+			}
+			if (vars.line == "[DBGL] States          --- --- --- Successfully entered state: Sigil") {
+				vars.sigil_state = 1;
+			}
+			vars.start_load_time = DateTime.Now;
 			vars.loading = 1;
 		}
-		else if (vars.line == "[DBGM] CORE_SEER       GameClient::MSG_LoginComplete has been exited.") {
+		else if (vars.line == "[WARN] ClientPlayerAgg ChangeState() - spNetworkMove is NULL") {
+			vars.change_state_count += 1;
+		}
+		else if (vars.loading == 1 && (vars.line == "[DBGM] CORE_SEER       GameClient::MSG_LoginComplete has been exited." || vars.line == "[DBGM] CORE_SEER       Received CombatUpFirst msg." || vars.line == "[DBGM] CORE_SEER       Received MSG_CombatPhase 4." || vars.line == "[DBGL] States          --- --- --- Leaving state: Sigil")) {
+			if (vars.sigil_state == 1 && vars.change_state_count != 4) {
+				vars.restore_gametime = 1;
+			}
+			vars.sigil_state = 0;
+			vars.change_state_count = 0;
+			vars.end_load_time = DateTime.Now;
+			vars.load_time = vars.end_load_time - vars.start_load_time;
+			print("Load time: " + vars.load_time.TotalSeconds + " seconds");
 			vars.loading = 0;
 		}
 	}
@@ -330,5 +362,13 @@ isLoading {
 	}
 	else {
 		return false;
+	}
+}
+
+gameTime {
+	if (vars.restore_gametime == 1) {
+		vars.restore_gametime = 0;
+		print("Restoring game time");
+		return timer.CurrentTime.GameTime + vars.load_time;
 	}
 }
