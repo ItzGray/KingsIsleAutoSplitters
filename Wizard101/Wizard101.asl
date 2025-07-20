@@ -108,7 +108,7 @@ update {
 	if (vars.line != null) {
 		vars.line = vars.line.Substring(18);
 		// Debugging line
-		//print("Line " + vars.line);
+		print("Line " + vars.line);
 	}
 }
 
@@ -326,31 +326,10 @@ split {
 
 isLoading {
 	if (settings["loadtimeremoval"] == true) {
-		if (vars.line == "[DBGM] CORE_SEER       Transition windows has appeared" || vars.line == "[DBGM] CORE_SEER       GameClient closed application connection with state 0." || vars.line == "[DBGL] States          --- --- --- Successfully entered state: Sigil" || vars.line == "[DBGM] CORE_SEER       Received MSG_CombatPhase 5." || vars.line == "[STAT] ClientDuel      CombatPlanningPhaseWindow::ShowSpellSelection(False)") {
-			if (vars.sigil_state == 1) {
-				vars.load_time = DateTime.Now - vars.start_load_time;
-				vars.restore_gametime = 1;
-				vars.sigil_state = 0;
-				vars.change_state_count = 0;
-			}
-			if (vars.line == "[DBGL] States          --- --- --- Successfully entered state: Sigil") {
-				vars.sigil_state = 1;
-			}
-			vars.start_load_time = DateTime.Now;
+		if (vars.line == "[DBGM] CORE_SEER       Transition windows has appeared" || vars.line == "[DBGM] CORE_SEER       GameClient closed application connection with state 0.") {
 			vars.loading = 1;
 		}
-		else if (vars.line == "[WARN] ClientPlayerAgg ChangeState() - spNetworkMove is NULL") {
-			vars.change_state_count += 1;
-		}
-		else if (vars.loading == 1 && (vars.line == "[DBGM] CORE_SEER       GameClient::MSG_LoginComplete has been exited." || vars.line == "[DBGM] CORE_SEER       Received CombatUpFirst msg." || vars.line == "[DBGM] CORE_SEER       Received MSG_CombatPhase 4." || vars.line == "[DBGL] States          --- --- --- Leaving state: Sigil")) {
-			if (vars.sigil_state == 1 && vars.change_state_count != 4) {
-				vars.restore_gametime = 1;
-			}
-			vars.sigil_state = 0;
-			vars.change_state_count = 0;
-			vars.end_load_time = DateTime.Now;
-			vars.load_time = vars.end_load_time - vars.start_load_time;
-			print("Load time: " + vars.load_time.TotalSeconds + " seconds");
+		else if (vars.loading == 1 && (vars.line == "[DBGM] CORE_SEER       GameClient::MSG_LoginComplete has been exited.")) {
 			vars.loading = 0;
 		}
 	}
@@ -362,13 +341,5 @@ isLoading {
 	}
 	else {
 		return false;
-	}
-}
-
-gameTime {
-	if (vars.restore_gametime == 1) {
-		vars.restore_gametime = 0;
-		print("Restoring game time");
-		return timer.CurrentTime.GameTime + vars.load_time;
 	}
 }
