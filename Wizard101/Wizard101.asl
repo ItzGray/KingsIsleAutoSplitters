@@ -61,19 +61,9 @@ startup {
 init {
 	var logPath = "";
 	vars.loading = 0;
-	vars.change_state_count = 0;
-	vars.start_load_time = 0;
-	vars.end_load_time = 0;
-	vars.sigil_state = 0;
-	vars.restore_gametime = 0;
-	vars.game_load_time = 0;
-	// TODO: Replace with a better path thing
-	if (settings["verstandalone"] == true) {
-		logPath = "C:\\ProgramData\\KingsIsle Entertainment\\Wizard101\\Bin\\WizardClient.log";
-	}
-	else if (settings["versteam"] == true) {
-		logPath = "C:\\Program Files (x86)\\Steam\\steamapps\\common\\Wizard101\\Bin\\WizardClient.log";
-	}
+	var page = modules.First();
+	var gameDir = Path.GetDirectoryName(page.FileName);
+	logPath = gameDir.ToString() + "\\WizardClient.log";
 	if (File.Exists(logPath)) {
 		try {
 			FileStream fs = new FileStream(logPath, FileMode.Open, FileAccess.Write, FileShare.ReadWrite);
@@ -108,7 +98,7 @@ update {
 	if (vars.line != null) {
 		vars.line = vars.line.Substring(18);
 		// Debugging line
-		print("Line " + vars.line);
+		//print("Line " + vars.line);
 	}
 }
 
