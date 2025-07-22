@@ -28,7 +28,7 @@ Rattlebones - Splits upon completion of the quest "Sinister Skeleton".
 
 Old Judd - Splits upon completion of the quest "Secret Strife of Pets".
 
-General Akilles - Splits upon talking to Nolan Stormgate during the quest "Akilles' Deal". Used as an alternative to the "General Akilles%" setting in the Category section when you are doing a Wizard City% or Gobbler King% run.
+General Akilles - Splits upon talking to Nolan Stormgate during the quest "Akilles' Deal".
 
 Harvest Lord - Splits upon completion of the quest "The Enemy Revealed".
 
