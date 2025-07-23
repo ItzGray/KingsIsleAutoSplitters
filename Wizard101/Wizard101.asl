@@ -3,7 +3,8 @@ state("WizardGraphicalClient") {}
 startup {
 	settings.Add("starttimer", true, "Auto-Start timer");
 	settings.Add("loadtimeremoval", true, "Load Time Removal");
-	settings.Add("category", true, "Category (Select only one)");
+	settings.Add("autosplitting", true, "Auto-Splitting");
+	settings.Add("category", true, "Category Endings", "autosplitting");
 	settings.Add("wizardcitycat", false, "Wizard City%", "category");
 	settings.Add("harvestlordcat", false, "Harvest Lord%", "category");
 	settings.Add("generalakillescat", false, "General Akilles%", "category");
@@ -12,7 +13,7 @@ startup {
 	settings.Add("categoryextensions", true, "Category Extensions", "category");
 	settings.Add("diecat", false, "Die%", "categoryextensions");
 	settings.Add("krakencat", false, "Kraken%", "categoryextensions");
-	settings.Add("majorbosssplits", true, "Major Bosses");
+	settings.Add("majorbosssplits", true, "Major Bosses", "autosplitting");
 	settings.Add("rattlebonessplit", false, "Rattlebones", "majorbosssplits");
 	settings.Add("juddsplit", false, "Old Judd", "majorbosssplits");
 	settings.Add("gasplit", false, "General Akilles", "majorbosssplits");
@@ -23,31 +24,31 @@ startup {
 	settings.Add("lnsplit", false, "Lord Nightshade", "majorbosssplits");
 	settings.Add("princesplit", false, "Prince Gobblestone", "majorbosssplits");
 	settings.Add("baronsplit", false, "Barons Greebly and Rotunda", "majorbosssplits");
-	settings.Add("unicornwaymisc", true, "Unicorn Way");
+	settings.Add("unicornwaymisc", true, "Unicorn Way", "autosplitting");
 	settings.Add("soulsplit", false, "Lost Souls", "unicornwaymisc");
 	settings.Add("piratesplit", false, "Skeletal Pirates", "unicornwaymisc");
 	settings.Add("fairysplit", false, "Dark Fairies", "unicornwaymisc");
-	settings.Add("cyclopslanemisc", true, "Cyclops Lane");
+	settings.Add("cyclopslanemisc", true, "Cyclops Lane", "autosplitting");
 	settings.Add("trollsplit", false, "Lumbering Trolls", "cyclopslanemisc");
 	settings.Add("cyrussplit", false, "Cyrus' Laundry", "cyclopslanemisc");
 	settings.Add("bubblesplit", false, "Bubbles", "cyclopslanemisc");
 	settings.Add("warhornsplit", false, "Warhorns", "cyclopslanemisc");
-	settings.Add("tritonavenuemisc", true, "Triton Avenue");
+	settings.Add("tritonavenuemisc", true, "Triton Avenue", "autosplitting");
 	settings.Add("minionsplit1", false, "Haunted Minions", "tritonavenuemisc");
 	settings.Add("eelsplit1", false, "Electric Eel", "tritonavenuemisc");
 	settings.Add("foddersplit1", false, "Rotting Fodders", "tritonavenuemisc");
 	settings.Add("screamersplit", false, "Scarlet Screamers", "tritonavenuemisc");
-	settings.Add("firecatalleymisc", true, "Firecat Alley");
+	settings.Add("firecatalleymisc", true, "Firecat Alley", "autosplitting");
 	settings.Add("minionsplit2", false, "Haunted Minions", "firecatalleymisc");
 	settings.Add("elfhuntersplit", false, "Fire Elf Hunters", "firecatalleymisc");
 	settings.Add("magmamansplit", false, "Magma Men", "firecatalleymisc");
-	settings.Add("hauntedcavemisc", true, "Haunted Cave");
+	settings.Add("hauntedcavemisc", true, "Haunted Cave", "autosplitting");
 	settings.Add("fieldguardsplit", false, "Field Guards", "hauntedcavemisc");
-	settings.Add("colossusmisc", true, "Colossus Boulevard");
+	settings.Add("colossusmisc", true, "Colossus Boulevard", "autosplitting");
 	settings.Add("scavengersnowmensplit", false, "Gobbler Scavengers/Evil Snowmen", "colossusmisc");
 	settings.Add("scoutersplit", false, "Gobbler Scouters", "colossusmisc");
 	settings.Add("gorgergluttonmunchersplit", false, "Gobbler Gorgers/Gluttons/Munchers", "colossusmisc");
-	settings.Add("krakenmisc", true, "Kraken%");
+	settings.Add("krakenmisc", true, "Kraken%", "autosplitting");
 	settings.Add("eelsplit2", false, "Electric Eels", "krakenmisc");
 	settings.Add("barrelsplit", false, "Barrels", "krakenmisc");
 	settings.Add("foddersplit2", false, "Rotting Fodder", "krakenmisc");
@@ -56,20 +57,21 @@ startup {
 init {
 	var logPath = "";
 	vars.loaded = 0;
-	vars.loading = 0;
+	vars.loading = false;
 	vars.started = 0;
 	var page = modules.First();
 	var gameDir = Path.GetDirectoryName(page.FileName);
 	logPath = gameDir.ToString() + "\\WizardClient.log";
 	if (File.Exists(logPath)) {
 		try {
-			FileStream fs = new FileStream(logPath, FileMode.Open, FileAccess.Write, FileShare.ReadWrite);
-			fs.SetLength(0);
-			fs.Close();
+			vars.reader = new StreamReader(new FileStream(logPath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite));
+			print("Connected successfully to " + logPath);
 		}
-		catch {}
-		vars.reader = new StreamReader(new FileStream(logPath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite));
-		print("Connected successfully to " + logPath);
+		catch {
+			print("Failed to connect to " + logPath);
+			vars.reader = null;
+			vars.line = null;
+		}
 	} 
 	else {
 		print("Couldn't find log file path");
@@ -92,7 +94,7 @@ update {
 }
 
 start {
-	vars.loading = 0;
+	vars.loading = false;
 	vars.loaded = 0;
 	vars.started = 0;
 	if (settings["starttimer"]) {
@@ -168,26 +170,21 @@ isLoading {
 			vars.started == 1 ||
 			vars.line.Contains("[DBGM] CORE_SEER       GameClient::MSG_CharacterSelected: Error=0, PrepPhase=1")
 		) {
-			vars.loading = 1;
+			vars.loading = true;
 			vars.started = 0;
 			return true;
 		}
 		else if (
-			vars.loading == 1 &&
+			vars.loading &&
 			(
 				vars.line.Contains("[DBGL] WizClientGameEf HandleStatisticUpdate: Updating health globe (new health:") ||
 				vars.line.Contains("[DBGM] CORE_SEER       LOGIN RESPONSE: Error=0") ||
 				vars.line.Contains("[WARN] CORE_SEER       Window::LoadGUI() - Loaded GUI 'Tutorial.gui' with deprecated GUI/ prefix!")
 			)
 		) {
-			vars.loading = 0;
+			vars.loading = false;
 			return false;
 		}
 	}
-	if (vars.loading == 1) {
-		return true;
-	}
-	else {
-		return false;
-	}
+	return vars.loading;
 }
