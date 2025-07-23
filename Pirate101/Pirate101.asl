@@ -2,24 +2,30 @@ state("Pirate") {}
 
 startup {
 	settings.Add("starttimer", true, "Auto-Start timer");
-	settings.Add("category", true, "Category (Select only one)");
+	settings.Add("loadtimeremoval", true, "Load Time Removal");
+	settings.Add("autosplitting", true, "Auto-Splitting");
+	settings.Add("category", true, "Category Endings", "autosplitting");
 }
 
 init {
+	vars.loading = false;
 	var logPath = "";
-	var firstModule = modules.First();
-	var gameDir = Path.GetDirectoryName(firstModule.FileName);
+	var page = modules.First();
+	var gameDir = Path.GetDirectoryName(page.FileName);
 	logPath = gameDir.ToString() + "\\Logs\\Captains.log";
 	if (File.Exists(logPath)) {
 		try {
-			FileStream fs = new FileStream(logPath, FileMode.Open, FileAccess.Write, FileShare.ReadWrite);
-			fs.SetLength(0);
-			fs.Close();
+			vars.reader = new StreamReader(new FileStream(logPath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite));
+			print("Connected successfully to " + logPath);
 		}
-		catch {}
-		vars.reader = new StreamReader(new FileStream(logPath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite));
+		catch {
+			print("Failed to connect to " + logPath);
+			vars.reader = null;
+			vars.line = null;
+		}
 	} 
 	else {
+		print("Couldn't find log file path");
 		vars.reader = null;
 		vars.line = null;
 	}
@@ -27,38 +33,40 @@ init {
 
 update {
 	while (vars.reader != null) {
-		vars.line = vars.reader.ReadLine();
-		if (vars.line == null) {
-			return false;
-		}
-		try {
-			vars.line = vars.line.Substring(18);
-		}
-		catch {
-			return false;
-		}
-		var lineStart = vars.line.Substring(0, 6);
-		if (lineStart == "[DBGL]" || lineStart == "[WARN]" || lineStart == "[ERRO]") {
+		vars.line = vars.reader.ReadToEnd();
+		if (vars.line == null || vars.line == "") {
 			return false;
 		}
 		break;
 	}
-	// Debugging line
-	print("Line " + vars.line);
 }
 
 start {
-	vars.questsCompleted = 0;
-	if (settings["starttimer"] == true) {
-		if (vars.line == "[STAT] Tutorial        ClientTutorial.cpp   0130 [0] Posting server event: "Event_Tutorial_Brig_SkipTutorial"") {
+	vars.loading = false;
+	if (settings["starttimer"]) {
+		if (vars.line.Contains("[STAT] Tutorial        ClientTutorial.cpp   0130 [0] Posting server event: \"Event_Tutorial_Brig_SkipTutorial\"")) {
 			return true;
 		}
 	}
-	else {
-		return false;
-	}
 }
 
-split {
+split {}
 
+isLoading {
+	if (settings["loadtimeremoval"]) {
+		if (
+			vars.line.Contains("[STAT] GAME_CLIENT     GameClient.cpp       4211 [") ||
+			vars.line.Contains("[DBGM] CORE_SEER       GameClient.cpp       3673 [0] GameClient closed application connection with state 0.") ||
+			vars.line.Contains("[STAT] ConnectionTimer GameClient.cpp       0209 [0] ZoneServer Connection Timer Initialized")
+		) {
+			vars.loading = true;
+		}
+		else if (
+			vars.line.Contains("[STAT] ResourceManager ResourceManager.cpp  1033 [0] Zone load time ") ||
+			vars.line.Contains("[DBGM] CORE_SEER       GameClient.cpp       2422 [0] LOGIN RESPONSE: Error=0")
+		) {
+			vars.loading = false;
+		}
+	}
+	return vars.loading;
 }
