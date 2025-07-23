@@ -8,7 +8,7 @@ A few notes:
 
 Here's where all the settings cause splits to happen as well as some other details if necessary:
 # Wizard101
-## Category
+## Category Endings
 #### Note: All of the category ending splits (except for Die%) are slightly inaccurately timed compared to the actual timing standards. This is a limitation of the auto-splitter, but can be compensated for during verification by retiming.
 Harvest Lord% - Splits upon completion of the quest "Triton Report".
 
