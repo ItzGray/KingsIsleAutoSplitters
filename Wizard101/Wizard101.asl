@@ -122,7 +122,7 @@ split {
 		// Major Boss Splits
 		// Rattlebones split is slightly inaccurate to UW% ending, Judd and Akilles splits are slightly weird
 		(settings["rattlebonessplit"] && vars.line.Contains("[DBGL] SoundSystem     Sound stream |Sound_Dialogue_001|WorldData|Sound/Dialogue/CerenNightchant_001_22.mp3 is ready for playing.")) ||
-		(settings["juddsplit"] && vars.line.Contains("[DBGL] SoundSystem     Sound stream |Sound_Dialogue_002|WorldData|Sound/Dialogue/SeargeantMuldoon_002_06.mp3 is ready for playing.")) ||
+		(settings["juddsplit"] && vars.line.Contains("[DBGL] SoundSystem     Sound stream |Sound_Dialogue_002|WorldData|Sound/Dialogue/SeargeantMuldoon_002_05.mp3 is ready for playing.")) ||
 		(settings["gasplit"] && vars.line.Contains("[DBGL] SoundSystem     Sound stream |Sound_Dialogue_005|WorldData|Sound/Dialogue/NolanStormgate_005_21.mp3 is ready for playing.")) ||
 		(settings["hlsplit"] && vars.line.Contains("[DBGL] SoundSystem     Sound stream |Sound_Dialogue_002|WorldData|Sound/Dialogue/SuzieGryphonbane_002_07.mp3 is ready for playing.")) ||
 		(settings["bgsplit"] && vars.line.Contains("[DBGL] SoundSystem     Sound stream |Sound_Dialogue_005|WorldData|Sound/Dialogue/GrettaDarkkettle_005_22.mp3 is ready for playing.")) ||
