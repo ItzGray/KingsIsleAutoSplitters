@@ -55,16 +55,12 @@ startup {
 }
 
 init {
-	var logPath = "";
-	vars.loaded = 0;
 	vars.loading = false;
-	vars.started = 0;
-	var page = modules.First();
-	var gameDir = Path.GetDirectoryName(page.FileName);
-	logPath = gameDir.ToString() + "\\WizardClient.log";
+	var logPath = Path.GetDirectoryName(modules.First().FileName).ToString() + "\\WizardClient.log";
 	if (File.Exists(logPath)) {
 		try {
 			vars.reader = new StreamReader(new FileStream(logPath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite));
+			vars.line = vars.reader.ReadToEnd();
 			print("Connected successfully to " + logPath);
 		}
 		catch {
@@ -88,18 +84,13 @@ update {
 		}
 		break;
 	}
-	if (vars.line.Contains("[DBGM] CORE_SEER       GameClient::MSG_LoginComplete has been exited.")) {
-		vars.loaded = 1;
-	}
 }
 
 start {
 	vars.loading = false;
-	vars.loaded = 0;
-	vars.started = 0;
 	if (settings["starttimer"]) {
 		if (vars.line.Contains("[DBGM] CORE_SEER       GameClient::MSG_CharacterSelected: Error=0, PrepPhase=1")) {
-			vars.started = 1;
+			vars.loading = true;
 			return true;
 		}
 	}
@@ -167,17 +158,16 @@ isLoading {
 		if (
 			vars.line.Contains("[DBGM] CORE_SEER       Transition windows has appeared") ||
 			vars.line.Contains("[DBGM] CORE_SEER       GameClient closed application connection with state 0.") ||
-			vars.started == 1 ||
 			vars.line.Contains("[DBGM] CORE_SEER       GameClient::MSG_CharacterSelected: Error=0, PrepPhase=1")
 		) {
 			vars.loading = true;
-			vars.started = 0;
 			return true;
 		}
 		else if (
 			vars.loading &&
 			(
-				vars.line.Contains("[DBGL] WizClientGameEf HandleStatisticUpdate: Updating health globe (new health:") ||
+				vars.line.Contains("[ERRO] CLIENT           639613566 Failed to load gamebryo texture resource:") ||
+				vars.line.Contains("[DBGL] LADDER          PvPClientManager::MSG_Ladder  ladder[") ||
 				vars.line.Contains("[DBGM] CORE_SEER       LOGIN RESPONSE: Error=0") ||
 				vars.line.Contains("[WARN] CORE_SEER       Window::LoadGUI() - Loaded GUI 'Tutorial.gui' with deprecated GUI/ prefix!")
 			)
