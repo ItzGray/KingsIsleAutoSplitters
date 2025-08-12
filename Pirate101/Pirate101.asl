@@ -9,10 +9,7 @@ startup {
 
 init {
 	vars.loading = false;
-	var logPath = "";
-	var page = modules.First();
-	var gameDir = Path.GetDirectoryName(page.FileName);
-	logPath = gameDir.ToString() + "\\Logs\\Captains.log";
+	var logPath = Path.GetDirectoryName(modules.First().FileName).ToString() + "\\Logs\\Captains.log";
 	if (File.Exists(logPath)) {
 		try {
 			vars.reader = new StreamReader(new FileStream(logPath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite));
