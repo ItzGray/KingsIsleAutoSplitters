@@ -21,7 +21,7 @@ Die% - Splits when a loading screen appears to take you to The Commons.
 
 Kraken% - Splits upon completion of the quest "Decease the Kraken!".
 ## Major Bosses
-Rattlebones - Splits upon completion of the quest "Sinister Skeleton".
+Rattlebones - Splits upon defeating Rattlebones during the quest "Sinister Skeleton".
 
 Old Judd - Splits upon completion of the quest "Secret Strife of Pets".
 
