@@ -1,3 +1,7 @@
+# How to Set Up the Load Remover
+Make sure the "Load Time Removal" setting is enabled in the auto-splitter settings. It should be enabled by default.
+
+Add a separate Timer (or Detailed Timer) into your LiveSplit layout, and set the Timing Method to "Game Time". Afterwards, the load remover should work.
 # Pirate101 Split Info
 #### Note: The Pirate101 auto-splitter and load remover is still very much unfinished.
 ## Category Endings
@@ -45,3 +49,44 @@ Cutthroats - Splits upon talking to Livsey during the quest "Into the Skull Cave
 
 Flooded Shrine - Splits upon talking to Shepherd before fighting Fin Dorsal during the quest "Into the Skull Cave".
 ## Moe%
+Skarakeets - Splits upon completion of the quest "Ring, My Belle".
+
+Red Claw Ships - Splits upon defeating Red Claw Ships during the quest "Gordon's Fishermen".
+
+Shelly Duvall - Splits upon defeating Shelly Duvall during the quest "Gordon's Fishermen".
+
+Red Hook Cave - Splits upon completion of the quest "Gordon's Fishermen".
+
+Louis Jerry - Splits upon completion of the instance quest "Doyle and Trouble".
+## Manny%
+Dinolizards - Splits upon talking to Zadok after defeating Dinolizards during the quest "The Pirate That Time Forgot".
+
+Kawil Raptors - Splits upon completion of the quest "Lizard City".
+
+Tzib'Chac Finskulls - Splits upon completion of the quest "The City That Time Forgot".
+## Jack%
+Underwater Grotto - Splits upon completion of the instance quest "Crab Bag".
+
+Cutthroat Ships - Splits upon completion of the quest "Sharks in the Water".
+
+Sergeant Seger 1 - Splits upon completion of the quest "Troubles Down Below".
+
+Sergeant Seger 2 - Splits upon completion of the quest "To Track a Traitor!".
+
+Darzoz - Splits upon completion of the instance quest "The Thresher Connection".
+
+Fire Ship - Splits upon completion of the instance quest "Pawns of the Prawns".
+## Ratbeard%
+Vortex of Doom - Splits upon completion of the quest "The Most Dangerous Catch".
+
+Waponi Ships - Splits upon talking to Chief Omurtu after defeating Waponi Ships during the quest "A Fishy Business".
+
+Rocco - Splits upon completion of the quest "Belly Aches".
+
+Grim Mr. Gordon - Splits upon completion of the quest "One-Eyed Jacks Are Wild".
+
+Bounty Island - Splits upon completion of the instance quest "Captain Gunn's Test".
+## Skull Island%
+House Guzman Ships - Splits upon completion of the quest "Monkey Suit".
+
+Troggies - Splits upon completion of the quest "Rumble in the Jungle".
