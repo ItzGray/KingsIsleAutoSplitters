@@ -291,7 +291,7 @@ isLoading {
 		vars.loading &&
 		(
 			vars.line.Contains("[ERRO] CLIENT           639613566 Failed to load gamebryo texture resource:") ||
-			vars.line.Contains("[DBGL] LADDER          PvPClientManager::MSG_Ladder  ladder[") ||
+			vars.line.Contains("[DBGL] WizClientGameEf HandleStatisticUpdate: Updating health globe (new health:") ||
 			vars.line.Contains("[DBGM] CORE_SEER       LOGIN RESPONSE: Error=0") ||
 			vars.line.Contains("[WARN] CORE_SEER       Window::LoadGUI() - Loaded GUI 'Tutorial.gui' with deprecated GUI/ prefix!")
 		)
