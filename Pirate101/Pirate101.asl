@@ -2,7 +2,9 @@ state("Pirate") {}
 
 startup {
 	settings.Add("starttimer", true, "Auto-Start timer");
+	settings.SetToolTip("starttimer", "Starts the timer automatically when skipping the tutorial.");
 	settings.Add("loadtimeremoval", true, "Load Time Removal");
+	settings.SetToolTip("loadtimeremoval", "Enables Load Time Removal (Make sure to add a Game Time Timer to your layout!)");
 }
 
 init {
