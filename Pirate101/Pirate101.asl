@@ -3,8 +3,6 @@ state("Pirate") {}
 startup {
 	settings.Add("starttimer", true, "Auto-Start timer");
 	settings.Add("loadtimeremoval", true, "Load Time Removal");
-	settings.Add("autosplitting", true, "Auto-Splitting");
-	settings.Add("category", true, "Category Endings", "autosplitting");
 }
 
 init {
@@ -13,6 +11,7 @@ init {
 	if (File.Exists(logPath)) {
 		try {
 			vars.reader = new StreamReader(new FileStream(logPath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite));
+			vars.line = vars.reader.ReadToEnd();
 			print("Connected successfully to " + logPath);
 		}
 		catch {
@@ -47,23 +46,19 @@ start {
 	}
 }
 
-split {}
-
 isLoading {
-	if (settings["loadtimeremoval"]) {
-		if (
-			vars.line.Contains("[STAT] GAME_CLIENT     GameClient.cpp       4211 [") ||
-			vars.line.Contains("[DBGM] CORE_SEER       GameClient.cpp       3673 [0] GameClient closed application connection with state 0.") ||
-			vars.line.Contains("[STAT] ConnectionTimer GameClient.cpp       0209 [0] ZoneServer Connection Timer Initialized")
-		) {
-			vars.loading = true;
-		}
-		else if (
-			vars.line.Contains("[STAT] ResourceManager ResourceManager.cpp  1033 [0] Zone load time ") ||
-			vars.line.Contains("[DBGM] CORE_SEER       GameClient.cpp       2422 [0] LOGIN RESPONSE: Error=0")
-		) {
-			vars.loading = false;
-		}
+	if (
+		vars.line.Contains("[STAT] GAME_CLIENT     GameClient.cpp       4211 [") ||
+		vars.line.Contains("[DBGM] CORE_SEER       GameClient.cpp       3673 [0] GameClient closed application connection with state 0.") ||
+		vars.line.Contains("[STAT] ConnectionTimer GameClient.cpp       0209 [0] ZoneServer Connection Timer Initialized")
+	) {
+		vars.loading = true;
 	}
-	return vars.loading;
+	else if (
+		vars.line.Contains("[STAT] ResourceManager ResourceManager.cpp  1033 [0] Zone load time ") ||
+		vars.line.Contains("[DBGM] CORE_SEER       GameClient.cpp       2422 [0] LOGIN RESPONSE: Error=0")
+	) {
+		vars.loading = false;
+	}
+	return (settings["loadtimeremoval"] && vars.loading);
 }
